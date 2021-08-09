@@ -1,17 +1,17 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const models = require('./models');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const books = require('./routes/books');
+const routes = require('./routes/index');
 
-var app = express();
+const app = express();
 
 (async () => {
-    await models.sequelize.sync({ force:true });
+    await models.sequelize.sync();
     try {
       await models.sequelize.authenticate();
       console.log('Connection to the database successful');
@@ -30,8 +30,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', routes);
+app.use('/books', books);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

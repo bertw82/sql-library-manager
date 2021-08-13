@@ -14,7 +14,7 @@ function asyncHandler(cb){
   }
 }
 
-/* GET home page. */
+/* home page. */
 router.get('/', asyncHandler(async (req, res) => {
   const books = await Book.findAll({
     attributes: ['id', 'title', 'author', 'genre', 'year'],
@@ -23,29 +23,58 @@ router.get('/', asyncHandler(async (req, res) => {
   res.render('index', { books, title: 'Library' });
 }));
 
-/* GET new book form */
-router.get('/books/new', (req, res) => {
-
-});
-
-/* POST new book to database */
-router.post('/books/new', asyncHandler(async (req,res) => {
-
+/* New book form */
+router.get('/new', asyncHandler(async (req, res) => {
+  res.render('books/new_book', { book: {}, title: 'New Book' });
 }));
 
-/* GET book detail form */
-router.get('/books/:id', asyncHandler(async (req,res) => {
-
+/* Post new book to database */
+router.post('/', asyncHandler(async (req,res) => {
+  const book = await Book.create(req.body);
+  res.redirect('/books');
 }));
 
-/* POST update book info in database */
-router.post('/books/:id', asyncHandler(async (req,res) => {
-
+/* Book detail form */
+router.get('/:id', asyncHandler(async (req,res) => {
+  const book = await Book.findByPk(req.params.id);
+  if (book) {
+    res.render('books/update_book', { book, title: 'Update Book' });
+  } else {
+    res.sendStatus(404);
+  }
 }));
 
-/* POST delete a book */
-router.post('/books/:id/delete', asyncHandler(async (req,res) => {
+/* Update book info in database */
+router.post('/:id', asyncHandler(async (req,res) => {
+  const book = await Book.findByPk(req.params.id);
+  console.log(book);
+  if (book) {
+    await book.update(req.body);
+    res.redirect("/books/" + book.id), { book, title: "New Book"};
+  } else {
+    res.sendStatus(404);
+  }
+}));
 
+/* Delete a book */
+router.get('/:id/delete', asyncHandler(async (req,res) => {
+  const book = await Book.findByPk(req.params.id);
+  if (book) {
+    res.render('books/delete', { book, title: "Delete Book"})
+  } else {
+    res.sendStatus(404);
+  }
+}));
+
+
+router.post('/:id/delete', asyncHandler(async (req,res) => {
+  const book = await Book.findByPk(req.params.id);
+  if (book) {
+    await book.destroy();
+    res.redirect('/books');
+  } else {
+    res.sendStatus(404);
+  } 
 }));
 
 module.exports = router;

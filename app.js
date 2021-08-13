@@ -33,20 +33,34 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/books', books);
 
+// test for global errors
+// app.use((req,res,next) => {
+//     console.log('hello');
+//     const err = new Error('oh no!');
+//     err.status = undefined;
+//     next(err); 
+// });
+
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use((req, res, next) => {
+  const err = new Error();
+  err.message = 'Page Not Found';
+  err.status = 404;
+  console.log(`Error ${err.status}: ${err.message}`);
+  res.render('books/page_not_found', { err });
+  next();
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+app.use((err, req, res, next) => {
+  res.locals.error = err;
+  console.log(err.status);
+  if (err.status === undefined) {
+      err.status = 500;
+      err.message = 'Server Error';
+      console.log(`Error ${err.status}: ${err.message}`);
+      res.render('error', { err });
+  } 
 });
 
 module.exports = app;

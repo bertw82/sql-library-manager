@@ -4,7 +4,7 @@ block content
     h2= title 
     p Are you sure you want to delete #{book.title} 
 
-    form(action="books/" + book.id + "/delete", method="post")
+    form(action="/books/" + book.id + "/delete", method="post")
         a(href="/books/" + book.id) No! Back to Safety! 
         |
         input(type="submit", value="Yes, please delete")

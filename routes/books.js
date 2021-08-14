@@ -40,7 +40,7 @@ router.post('/', asyncHandler(async (req,res) => {
       res.render('books/new_book', { book, errors: error.errors, title: "New Book" });
     } else {
       throw error;
-    }  
+    }
   }
 }));
 
@@ -66,7 +66,8 @@ router.post('/:id', asyncHandler(async (req,res) => {
       res.sendStatus(404);
     }
   } catch (error) {
-    if(error.name === "SequelizeValidationError") {
+    if (error.name === "SequelizeValidationError") {
+      console.log(error)
       book = await Book.build(req.body);
       book.id = req.params.id;
       res.render("books/update_book", { book, errors: error.errors, title: "Update Book" })

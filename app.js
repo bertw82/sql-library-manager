@@ -7,6 +7,7 @@ const models = require('./models');
 
 const books = require('./routes/books');
 const routes = require('./routes/index');
+const { create } = require('domain');
 
 const app = express();
 
@@ -33,17 +34,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/books', books);
 
-// test for global errors
-// app.use((req,res,next) => {
-//     console.log('hello');
-//     const err = new Error('oh no!');
-//     err.status = undefined;
-//     next(err); 
-// });
-
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new Error();
+  const err = new Error('Not Found');
   err.message = 'Page Not Found';
   err.status = 404;
   console.log(`Error ${err.status}: ${err.message}`);
@@ -54,13 +47,16 @@ app.use((req, res, next) => {
 // error handler
 app.use((err, req, res, next) => {
   res.locals.error = err;
-  console.log(err.status);
   if (err.status === undefined) {
       err.status = 500;
       err.message = 'Server Error';
       console.log(`Error ${err.status}: ${err.message}`);
       res.render('error', { err });
-  } 
+  } else {
+    res.status(err.status || 500);
+    console.log(`Error ${err.status}: ${err.message}`);
+    res.render('error', { err });
+  }
 });
 
 module.exports = app;

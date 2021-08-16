@@ -8,8 +8,7 @@ function asyncHandler(cb){
     try {
       await cb(req, res, next)
     } catch(error){
-      // Forward error to the global error handler
-      res.status(500).send(error);
+      next(error);
     }
   }
 }
@@ -29,7 +28,7 @@ router.get('/new', asyncHandler(async (req, res) => {
 }));
 
 /* Post new book to database */
-router.post('/', asyncHandler(async (req,res) => {
+router.post('/new', asyncHandler(async (req,res) => {
   let book;
   try {
     book = await Book.create(req.body);
@@ -45,17 +44,17 @@ router.post('/', asyncHandler(async (req,res) => {
 }));
 
 /* Book detail form */
-router.get('/:id', asyncHandler(async (req,res) => {
+router.get('/:id', asyncHandler(async (req,res, next) => {
   const book = await Book.findByPk(req.params.id);
   if (book) {
     res.render('books/update_book', { book, title: 'Update Book' });
   } else {
-    res.sendStatus(404);
+    next();
   }
 }));
 
 /* Update book info in database */
-router.post('/:id', asyncHandler(async (req,res) => {
+router.post('/:id', asyncHandler(async (req,res, next) => {
   let book;
   try {
     book = await Book.findByPk(req.params.id);
@@ -63,7 +62,7 @@ router.post('/:id', asyncHandler(async (req,res) => {
       await book.update(req.body);
       res.redirect("/books");
     } else {
-      res.sendStatus(404);
+      next();
     }
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
@@ -78,23 +77,22 @@ router.post('/:id', asyncHandler(async (req,res) => {
 }));
 
 /* Delete a book */
-router.get('/:id/delete', asyncHandler(async (req,res) => {
+router.get('/:id/delete', asyncHandler(async (req,res, next) => {
   const book = await Book.findByPk(req.params.id);
   if (book) {
     res.render('books/delete', { book, title: "Delete Book"})
   } else {
-    res.sendStatus(404);
+    next();
   }
 }));
 
-
-router.post('/:id/delete', asyncHandler(async (req,res) => {
+router.post('/:id/delete', asyncHandler(async (req,res, next) => {
   const book = await Book.findByPk(req.params.id);
   if (book) {
     await book.destroy();
     res.redirect('/books');
   } else {
-    res.sendStatus(404);
+    next();
   } 
 }));
 

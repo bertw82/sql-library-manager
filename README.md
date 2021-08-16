@@ -1,8 +1,6 @@
 # sql-library-manager
  SQL Library Manager
 
-Treehouse Full Stack JavaScript Techdegree Project 8
-
 To view this project, download the project files, run `npm install` in the command line, then navigate to http://localhost:3000/ in a browser. 
 
 This project was built with Express.js, SQLite, and PUG.

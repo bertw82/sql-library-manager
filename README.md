@@ -1,7 +1,7 @@
 # sql-library-manager
  SQL Library Manager
 
-To view this project, download the project files, run `npm install` in the command line, then navigate to http://localhost:3000/ in a browser. 
+To view this project, download the project files, run `npm install` then  `npm start` in the command line, then navigate to http://localhost:3000/ in a browser. 
 
 This project was built with Express.js, SQLite, and PUG.
 

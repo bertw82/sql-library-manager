@@ -40,7 +40,7 @@ app.use((req, res, next) => {
   err.message = 'Page Not Found';
   err.status = 404;
   console.log(`Error ${err.status}: ${err.message}`);
-  res.render('books/page_not_found', { err });
+  res.render('books/page-not-found', { err });
   next();
 });
 

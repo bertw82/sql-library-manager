@@ -15,11 +15,19 @@ function asyncHandler(cb){
 
 /* home page. */
 router.get('/', asyncHandler(async (req, res) => {
-  const books = await Book.findAll({
+  let limit = 6;
+  const page = Number.parseInt(req.query.page);
+  const books = await Book.findAndCountAll({
     attributes: ['id', 'title', 'author', 'genre', 'year'],
     order: [['title', 'ASC']],
+    limit,
+    offset: (page -1) * limit
   });
-  res.render('index', { books, title: 'Library' });
+  res.render('index', {
+    title: 'Library',
+    books: books.rows,
+    pages: Math.ceil(books.count / limit)
+  });
 }));
 
 /* New book form */

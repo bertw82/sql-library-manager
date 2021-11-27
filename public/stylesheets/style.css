@@ -92,6 +92,10 @@ input[type=text] {
   width: 300px;
 }
 
+#search {
+  margin-left: 0;
+}
+
 .error {
   color: rgb(236, 15, 15);
 }

@@ -6,21 +6,21 @@ block content
     form(action="/books" method="GET")
       input(type="text" id="search" name="search" placeholder="Search for Book")
 
-  table 
-    thead
-      tr 
-        th Title 
-        th Author 
-        th Genre
-        th Year
-    tbody 
-      each book in books 
-        tr  
-          td 
-            a(href='/books/' + book.id) #{book.title}
-          td #{book.author}
-          td #{book.genre}
-          td #{book.year}
+    table 
+      thead
+        tr 
+          th Title 
+          th Author 
+          th Genre
+          th Year
+      tbody 
+        each book in books 
+          tr  
+            td 
+              a(href='/books/' + book.id) #{book.title}
+            td #{book.author}
+            td #{book.genre}
+            td #{book.year}
           
   p
     a.button(href="/") Back to Home

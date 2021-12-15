@@ -14,9 +14,10 @@ function asyncHandler(cb){
   }
 }
 
-/* home page. */
+/* GET the Book List when app launches */
 router.get('/', asyncHandler(async (req, res) => {
   let books;
+  // if there is a search, GET search results
   if (req.query.search) {
     const searchTerm = req.query.search.toLowerCase();
     books = await Book.findAll({
@@ -34,13 +35,14 @@ router.get('/', asyncHandler(async (req, res) => {
       books,
     });
   } else {
+    // GET entire Book List
     let limit = 6;
     const page = Number.parseInt(req.query.page);
     books = await Book.findAndCountAll({
       attributes: ['id', 'title', 'author', 'genre', 'year'],
       order: [['title', 'ASC']],
       limit,
-      offset: (page - 1) * limit 
+      offset: page ? (page - 1) * limit : 0
     });
     res.render('index', {
       title: 'Library',
